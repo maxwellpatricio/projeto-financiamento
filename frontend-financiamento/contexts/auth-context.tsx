@@ -3,6 +3,7 @@
 import type React from "react"
 import { createContext, useContext, useState, useEffect, type ReactNode } from "react"
 import type { User, AuthContextType, RegisterData } from "@/types"
+import { useRouter } from "next/navigation"
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
@@ -22,6 +23,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(null)
   const [token, setToken] = useState<string | null>(null)
   const [isLoading, setIsLoading] = useState(false)
+  const router = useRouter()
 
   useEffect(() => {
     const savedToken = localStorage.getItem("token")
@@ -55,7 +57,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
       const user: User = {
         id: estudante.id,
-        name: `${estudante.nome} ${estudante.sobrenome}`,
+        nome: estudante.nome,
+        sobrenome: estudante.sobrenome,
         email: estudante.email,
         createdAt: estudante.createdAt
       }
@@ -80,7 +83,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ userData }),
+        body: JSON.stringify( userData ),
       });
 
       if (!response.ok) {
@@ -92,7 +95,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
       const user: User = {
         id: estudante.id,
-        name: `${estudante.nome} ${estudante.sobrenome}`,
+        nome: `${estudante.nome}`,
+        sobrenome: `${estudante.sobrenome}`,
         email: estudante.email,
         createdAt: estudante.createdAt
       }
@@ -117,12 +121,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
       }
 
       const response = await fetch('http://localhost:3000/api/me', {
-        method: 'PUT',
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': token
         },
-        body: JSON.stringify({ userData }),
+        body: JSON.stringify( userData ),
       });
 
       if (!response.ok) {
@@ -134,7 +138,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
       const user: User = {
         id: estudante.id,
-        name: `${estudante.nome} ${estudante.sobrenome}`,
+        nome: `${estudante.nome}`,
+        sobrenome: `${estudante.sobrenome}`,
         email: estudante.email,
         createdAt: estudante.createdAt
       }
@@ -156,6 +161,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     setToken(null)
     localStorage.removeItem("token")
     localStorage.removeItem("user")
+    router.push("/")
   }
 
   return (

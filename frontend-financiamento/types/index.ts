@@ -1,6 +1,7 @@
 export interface User {
   id: string
-  name: string
+  nome: string
+  sobrenome: string
   email: string
   createdAt: string
 }
@@ -34,9 +35,10 @@ export interface SimulationContextType {
 }
 
 export interface RegisterData {
-  name: string
+  nome: string
+  sobrenome: string
   email: string
-  password: string
+  senha: string
 }
 
 export interface LoginData {

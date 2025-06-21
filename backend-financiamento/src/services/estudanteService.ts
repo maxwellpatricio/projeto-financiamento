@@ -10,8 +10,10 @@ export class EstudanteService {
     email: string
     senha: string
   }) {
+    console.log('entrou')
     const hashedPassword = await hashPassword(data.senha)
 
+    console.log(hashedPassword)
     const estudante = await prisma.estudante.create({
       data: {
         nome: data.nome,

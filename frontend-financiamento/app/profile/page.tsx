@@ -15,18 +15,10 @@ import { useToast } from "@/hooks/use-toast"
 import { User, Edit, Save, X } from "lucide-react"
 
 const profileSchema = z.object({
-  name: z.string().min(2, "Nome deve ter pelo menos 2 caracteres"),
+  nome: z.string().min(2, "Nome deve ter pelo menos 2 caracteres"),
+  sobrenome: z.string().min(2, "Nome deve ter pelo menos 2 caracteres"),
   email: z.string().email("Email inválido"),
-  cpf: z.string().min(11, "CPF inválido"),
-  phone: z.string().min(10, "Telefone inválido"),
-  birthDate: z.string().min(1, "Data de nascimento é obrigatória"),
-  address: z.object({
-    street: z.string().min(1, "Rua é obrigatória"),
-    number: z.string().min(1, "Número é obrigatório"),
-    city: z.string().min(1, "Cidade é obrigatória"),
-    state: z.string().min(2, "Estado é obrigatório"),
-    zipCode: z.string().min(8, "CEP inválido"),
-  }),
+  id: z.string().email("ID não encontrado, refaça o login!"),
 })
 
 type ProfileFormData = z.infer<typeof profileSchema>
@@ -45,18 +37,17 @@ export default function ProfilePage() {
     resolver: zodResolver(profileSchema),
     defaultValues: user
       ? {
-          name: user.name,
-          email: user.email,
-          cpf: user.cpf,
-          phone: user.phone,
-          birthDate: user.birthDate,
-          address: user.address,
-        }
+        nome: user.nome,
+        sobrenome: user.sobrenome,
+        email: user.email,
+        id: user.id
+      }
       : undefined,
   })
 
   const onSubmit = async (data: ProfileFormData) => {
     try {
+      console.log('veio')
       await updateProfile(data)
       setIsEditing(false)
       toast({
@@ -92,7 +83,6 @@ export default function ProfilePage() {
 
             <form onSubmit={handleSubmit(onSubmit)}>
               <div className="space-y-6">
-                {/* Dados Pessoais */}
                 <Card>
                   <CardHeader>
                     <div className="flex items-center justify-between">
@@ -125,9 +115,15 @@ export default function ProfilePage() {
                   <CardContent>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div className="space-y-2">
-                        <Label htmlFor="name">Nome Completo</Label>
-                        <Input id="name" {...register("name")} disabled={!isEditing} />
-                        {errors.name && <p className="text-sm text-red-600">{errors.name.message}</p>}
+                        <Label htmlFor="nome">Nome Completo</Label>
+                        <Input id="nome" {...register("nome")} disabled={!isEditing} />
+                        {errors.nome && <p className="text-sm text-red-600">{errors.nome.message}</p>}
+                      </div>
+
+                      <div className="space-y-2">
+                        <Label htmlFor="sobrenome">Sobrenome</Label>
+                        <Input id="sobrenome" {...register("sobrenome")} disabled={!isEditing} />
+                        {errors.sobrenome && <p className="text-sm text-red-600">{errors.sobrenome.message}</p>}
                       </div>
 
                       <div className="space-y-2">
@@ -135,78 +131,10 @@ export default function ProfilePage() {
                         <Input id="email" type="email" {...register("email")} disabled={!isEditing} />
                         {errors.email && <p className="text-sm text-red-600">{errors.email.message}</p>}
                       </div>
-
-                      <div className="space-y-2">
-                        <Label htmlFor="cpf">CPF</Label>
-                        <Input id="cpf" {...register("cpf")} disabled={!isEditing} />
-                        {errors.cpf && <p className="text-sm text-red-600">{errors.cpf.message}</p>}
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label htmlFor="phone">Telefone</Label>
-                        <Input id="phone" {...register("phone")} disabled={!isEditing} />
-                        {errors.phone && <p className="text-sm text-red-600">{errors.phone.message}</p>}
-                      </div>
-
-                      <div className="space-y-2 md:col-span-2">
-                        <Label htmlFor="birthDate">Data de Nascimento</Label>
-                        <Input id="birthDate" type="date" {...register("birthDate")} disabled={!isEditing} />
-                        {errors.birthDate && <p className="text-sm text-red-600">{errors.birthDate.message}</p>}
-                      </div>
                     </div>
                   </CardContent>
                 </Card>
 
-                {/* Endereço */}
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Endereço</CardTitle>
-                    <CardDescription>Suas informações de endereço</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="street">Rua</Label>
-                        <Input id="street" {...register("address.street")} disabled={!isEditing} />
-                        {errors.address?.street && (
-                          <p className="text-sm text-red-600">{errors.address.street.message}</p>
-                        )}
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label htmlFor="number">Número</Label>
-                        <Input id="number" {...register("address.number")} disabled={!isEditing} />
-                        {errors.address?.number && (
-                          <p className="text-sm text-red-600">{errors.address.number.message}</p>
-                        )}
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label htmlFor="city">Cidade</Label>
-                        <Input id="city" {...register("address.city")} disabled={!isEditing} />
-                        {errors.address?.city && <p className="text-sm text-red-600">{errors.address.city.message}</p>}
-                      </div>
-
-                      <div className="space-y-2">
-                        <Label htmlFor="state">Estado</Label>
-                        <Input id="state" {...register("address.state")} disabled={!isEditing} />
-                        {errors.address?.state && (
-                          <p className="text-sm text-red-600">{errors.address.state.message}</p>
-                        )}
-                      </div>
-
-                      <div className="space-y-2 md:col-span-2">
-                        <Label htmlFor="zipCode">CEP</Label>
-                        <Input id="zipCode" {...register("address.zipCode")} disabled={!isEditing} />
-                        {errors.address?.zipCode && (
-                          <p className="text-sm text-red-600">{errors.address.zipCode.message}</p>
-                        )}
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-
-                {/* Informações da Conta */}
                 <Card>
                   <CardHeader>
                     <CardTitle>Informações da Conta</CardTitle>

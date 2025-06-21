@@ -15,19 +15,10 @@ import { useAuth } from "@/contexts/auth-context"
 import type { RegisterData } from "@/types"
 
 const registerSchema = z.object({
-  name: z.string().min(2, "Nome deve ter pelo menos 2 caracteres"),
+  nome: z.string().min(2, "Nome deve ter pelo menos 2 caracteres"),
+  sobrenome: z.string().min(2, "Sobrenome deve ter pelo menos 2 caracteres"),
   email: z.string().email("Email inválido"),
-  password: z.string().min(6, "Senha deve ter pelo menos 6 caracteres"),
-  cpf: z.string().min(11, "CPF inválido"),
-  phone: z.string().min(10, "Telefone inválido"),
-  birthDate: z.string().min(1, "Data de nascimento é obrigatória"),
-  address: z.object({
-    street: z.string().min(1, "Rua é obrigatória"),
-    number: z.string().min(1, "Número é obrigatório"),
-    city: z.string().min(1, "Cidade é obrigatória"),
-    state: z.string().min(2, "Estado é obrigatório"),
-    zipCode: z.string().min(8, "CEP inválido"),
-  }),
+  senha: z.string().min(6, "Senha deve ter pelo menos 6 caracteres")
 })
 
 export default function RegisterPage() {
@@ -73,9 +64,15 @@ export default function RegisterPage() {
               <h3 className="text-lg font-medium">Dados Pessoais</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="name">Nome Completo</Label>
-                  <Input id="name" placeholder="Seu nome completo" {...register("name")} />
-                  {errors.name && <p className="text-sm text-red-600">{errors.name.message}</p>}
+                  <Label htmlFor="nome">Primeiro Nome</Label>
+                  <Input id="nome" placeholder="Seu primeiro nome" {...register("nome")} />
+                  {errors.nome && <p className="text-sm text-red-600">{errors.nome.message}</p>}
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="sobrenome">SobreNome</Label>
+                  <Input id="sobrenome" placeholder="Seu sobrenome" {...register("sobrenome")} />
+                  {errors.nome && <p className="text-sm text-red-600">{errors.nome.message}</p>}
                 </div>
 
                 <div className="space-y-2">
@@ -85,63 +82,9 @@ export default function RegisterPage() {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="cpf">CPF</Label>
-                  <Input id="cpf" placeholder="000.000.000-00" {...register("cpf")} />
-                  {errors.cpf && <p className="text-sm text-red-600">{errors.cpf.message}</p>}
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="phone">Telefone</Label>
-                  <Input id="phone" placeholder="(11) 99999-9999" {...register("phone")} />
-                  {errors.phone && <p className="text-sm text-red-600">{errors.phone.message}</p>}
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="birthDate">Data de Nascimento</Label>
-                  <Input id="birthDate" type="date" {...register("birthDate")} />
-                  {errors.birthDate && <p className="text-sm text-red-600">{errors.birthDate.message}</p>}
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="password">Senha</Label>
-                  <Input id="password" type="password" placeholder="Sua senha" {...register("password")} />
-                  {errors.password && <p className="text-sm text-red-600">{errors.password.message}</p>}
-                </div>
-              </div>
-            </div>
-
-            {/* Endereço */}
-            <div className="space-y-4">
-              <h3 className="text-lg font-medium">Endereço</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="street">Rua</Label>
-                  <Input id="street" placeholder="Nome da rua" {...register("address.street")} />
-                  {errors.address?.street && <p className="text-sm text-red-600">{errors.address.street.message}</p>}
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="number">Número</Label>
-                  <Input id="number" placeholder="123" {...register("address.number")} />
-                  {errors.address?.number && <p className="text-sm text-red-600">{errors.address.number.message}</p>}
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="city">Cidade</Label>
-                  <Input id="city" placeholder="Sua cidade" {...register("address.city")} />
-                  {errors.address?.city && <p className="text-sm text-red-600">{errors.address.city.message}</p>}
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="state">Estado</Label>
-                  <Input id="state" placeholder="SP" {...register("address.state")} />
-                  {errors.address?.state && <p className="text-sm text-red-600">{errors.address.state.message}</p>}
-                </div>
-
-                <div className="space-y-2 md:col-span-2">
-                  <Label htmlFor="zipCode">CEP</Label>
-                  <Input id="zipCode" placeholder="00000-000" {...register("address.zipCode")} />
-                  {errors.address?.zipCode && <p className="text-sm text-red-600">{errors.address.zipCode.message}</p>}
+                  <Label htmlFor="senha">Senha</Label>
+                  <Input id="senha" type="senha" placeholder="Sua senha" {...register("senha")} />
+                  {errors.senha && <p className="text-sm text-red-600">{errors.senha.message}</p>}
                 </div>
               </div>
             </div>

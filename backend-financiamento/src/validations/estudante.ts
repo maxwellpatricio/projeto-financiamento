@@ -35,4 +35,9 @@ export const updateProfileSchema = z.object({
     .min(6, "Senha deve ter pelo menos 6 caracteres")
     .max(100, "Senha deve ter no máximo 100 caracteres")
     .optional(),
+  id: z
+    .string()
+    .min(6, "Id de usuário invalido!")
+    .max(100, "Id de usuário invalido!")
+    .optional(),
 })
