@@ -7,14 +7,10 @@ export interface User {
 }
 
 export interface Simulation {
-  id: string
   userId: string
-  totalValue: number
-  installments: number
-  interestRate: number
-  monthlyPayment: number
-  createdAt: string
-  updatedAt: string
+  valorTotal: number
+  quantidadeParcelas: number
+  jurosAoMes: number
 }
 
 export interface AuthContextType {
@@ -47,7 +43,7 @@ export interface LoginData {
 }
 
 export interface SimulationFormData {
-  totalValue: number
-  installments: number
-  interestRate: number
+  valorTotal: number
+  quantidadeParcelas: number
+  jurosAoMes: number
 }

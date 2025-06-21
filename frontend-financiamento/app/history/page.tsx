@@ -23,17 +23,17 @@ export default function HistoryPage() {
   const filteredSimulations = useMemo(() => {
     return simulations.filter((simulation) => {
       const matchesValue =
-        (!minValue || simulation.totalValue >= Number(minValue)) &&
-        (!maxValue || simulation.totalValue <= Number(maxValue))
+        (!minValue || simulation.valorTotal >= Number(minValue)) &&
+        (!maxValue || simulation.valorTotal <= Number(maxValue))
 
       const matchesInstallments =
-        (!minInstallments || simulation.installments >= Number(minInstallments)) &&
-        (!maxInstallments || simulation.installments <= Number(maxInstallments))
+        (!minInstallments || simulation.quantidadeParcelas >= Number(minInstallments)) &&
+        (!maxInstallments || simulation.quantidadeParcelas <= Number(maxInstallments))
 
       const matchesSearch =
         !searchTerm ||
-        simulation.totalValue.toString().includes(searchTerm) ||
-        simulation.installments.toString().includes(searchTerm)
+        simulation.valorTotal.toString().includes(searchTerm) ||
+        simulation.quantidadeParcelas.toString().includes(searchTerm)
 
       return matchesValue && matchesInstallments && matchesSearch
     })
@@ -149,7 +149,7 @@ export default function HistoryPage() {
               <CardContent>
                 <div className="space-y-4">
                   {paginatedSimulations.map((simulation) => (
-                    <div key={simulation.id} className="p-4 border rounded-lg hover:bg-gray-50 transition-colors">
+                    <div className="p-4 border rounded-lg hover:bg-gray-50 transition-colors">
                       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                         <div className="flex items-center gap-3">
                           <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
@@ -157,7 +157,7 @@ export default function HistoryPage() {
                           </div>
                           <div>
                             <p className="font-semibold">
-                              {simulation.totalValue.toLocaleString("pt-BR", {
+                              {simulation.valorTotal.toLocaleString("pt-BR", {
                                 style: "currency",
                                 currency: "BRL",
                               })}
@@ -167,27 +167,14 @@ export default function HistoryPage() {
                         </div>
 
                         <div>
-                          <p className="font-semibold">{simulation.installments}x</p>
+                          <p className="font-semibold">{simulation.quantidadeParcelas}x</p>
                           <p className="text-sm text-gray-500">Parcelas</p>
-                        </div>
-
-                        <div>
-                          <p className="font-semibold">
-                            {simulation.monthlyPayment.toLocaleString("pt-BR", {
-                              style: "currency",
-                              currency: "BRL",
-                            })}
-                          </p>
-                          <p className="text-sm text-gray-500">Parcela Mensal</p>
                         </div>
 
                         <div className="flex items-center gap-2">
                           <Calendar className="w-4 h-4 text-gray-400" />
                           <div>
-                            <p className="font-semibold">
-                              {new Date(simulation.createdAt).toLocaleDateString("pt-BR")}
-                            </p>
-                            <p className="text-sm text-gray-500">Taxa: {simulation.interestRate}%</p>
+                            <p className="text-sm text-gray-500">Taxa: {simulation.jurosAoMes}%</p>
                           </div>
                         </div>
                       </div>

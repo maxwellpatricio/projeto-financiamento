@@ -10,10 +10,7 @@ export class EstudanteService {
     email: string
     senha: string
   }) {
-    console.log('entrou')
     const hashedPassword = await hashPassword(data.senha)
-
-    console.log(hashedPassword)
     const estudante = await prisma.estudante.create({
       data: {
         nome: data.nome,
@@ -41,7 +38,6 @@ export class EstudanteService {
 
   async login(email: string, senha: string) {
 
-    console.log(email, senha, 'aaa');
     const estudante = await prisma.estudante.findUnique({
       where: { email },
     })

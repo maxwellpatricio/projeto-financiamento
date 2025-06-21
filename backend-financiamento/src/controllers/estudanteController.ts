@@ -56,7 +56,6 @@ export class EstudanteController {
   async updateProfile(req: Request, res: Response, next: NextFunction) {
     try {
       const { user } = req.body;
-      console.log(req.body);
       const validatedData = updateProfileSchema.parse(req.body)
 
       const estudante = await estudanteService.updateProfile(user!.id, validatedData)

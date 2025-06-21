@@ -14,8 +14,8 @@ export default function DashboardPage() {
   const stats = useMemo(() => {
     const totalSimulations = simulations.length
     const averagePayment =
-      simulations.length > 0 ? simulations.reduce((sum, sim) => sum + sim.monthlyPayment, 0) / simulations.length : 0
-    const totalValue = simulations.reduce((sum, sim) => sum + sim.totalValue, 0)
+      simulations.length > 0 ? simulations.reduce((sum, sim) => sum , 0) / simulations.length : 0
+    const totalValue = simulations.reduce((sum, sim) => sum + sim.valorTotal, 0)
 
     return {
       totalSimulations,
@@ -27,11 +27,9 @@ export default function DashboardPage() {
 
   const chartData = useMemo(() => {
     return simulations
-      .sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
       .map((sim, index) => ({
         name: `Sim ${index + 1}`,
-        valor: sim.totalValue,
-        parcela: sim.monthlyPayment,
+        valor: sim.valorTotal
       }))
   }, [simulations])
 
@@ -149,28 +147,21 @@ export default function DashboardPage() {
                 <CardContent>
                   <div className="space-y-4">
                     {stats.recentSimulations.map((simulation) => (
-                      <div key={simulation.id} className="flex items-center justify-between p-4 border rounded-lg">
+                      <div className="flex items-center justify-between p-4 border rounded-lg">
                         <div className="flex-1">
                           <div className="flex items-center justify-between">
                             <p className="font-medium">
-                              {simulation.totalValue.toLocaleString("pt-BR", {
+                              {simulation.valorTotal.toLocaleString("pt-BR", {
                                 style: "currency",
                                 currency: "BRL",
                               })}
-                            </p>
-                            <p className="text-sm text-gray-500">
-                              {new Date(simulation.createdAt).toLocaleDateString("pt-BR")}
                             </p>
                           </div>
                           <div className="flex items-center justify-between mt-1">
                             <p className="text-sm text-gray-600">
-                              {simulation.installments}x de{" "}
-                              {simulation.monthlyPayment.toLocaleString("pt-BR", {
-                                style: "currency",
-                                currency: "BRL",
-                              })}
+                              {simulation.quantidadeParcelas}x
                             </p>
-                            <p className="text-sm text-gray-500">Taxa: {simulation.interestRate}%</p>
+                            <p className="text-sm text-gray-500">Taxa: {simulation.jurosAoMes}%</p>
                           </div>
                         </div>
                       </div>

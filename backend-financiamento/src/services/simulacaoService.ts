@@ -5,20 +5,19 @@ import type { SimulacaoResponse } from "../types"
 export class SimulacaoService {
   async createSimulacao(
     idEstudante: string,
-    data: {
-      valorTotal: number
-      quantidadeParcelas: number
-      jurosAoMes: number
-    },
+    valorTotal: number,
+    quantidadeParcelas: number,
+    jurosAoMes: number
+
   ): Promise<SimulacaoResponse> {
-    const valorParcelaMensal = calcularParcelaMensal(data.valorTotal, data.jurosAoMes, data.quantidadeParcelas)
+    const valorParcelaMensal = calcularParcelaMensal(valorTotal, jurosAoMes, quantidadeParcelas)
 
     const simulacao = await prisma.simulacaoFinanciamento.create({
       data: {
         idEstudante,
-        valorTotal: data.valorTotal,
-        quantidadeParcelas: data.quantidadeParcelas,
-        jurosAoMes: data.jurosAoMes,
+        valorTotal: valorTotal,
+        quantidadeParcelas: quantidadeParcelas,
+        jurosAoMes: jurosAoMes,
         valorParcelaMensal,
       },
       select: {

@@ -8,10 +8,8 @@ const simulacaoService = new SimulacaoService()
 export class SimulacaoController {
   async createSimulacao(req: Request, res: Response, next: NextFunction) {
     try {
-      const { user } = req as AuthenticatedRequest
-      const validatedData = createSimulacaoSchema.parse(req.body)
-
-      const simulacao = await simulacaoService.createSimulacao(user!.id, validatedData)
+      const { id, valorTotal, quantidadeParcelas, jurosAoMes } = req.body;
+      const simulacao = await simulacaoService.createSimulacao(id, valorTotal, quantidadeParcelas, jurosAoMes)
 
       res.status(201).json({
         message: "Simulação criada com sucesso",
@@ -24,7 +22,7 @@ export class SimulacaoController {
 
   async getSimulacoes(req: Request, res: Response, next: NextFunction) {
     try {
-      const { user } = req as AuthenticatedRequest
+      const { user } = req.body;
       const simulacoes = await simulacaoService.getSimulacoesByEstudante(user!.id)
 
       res.json({

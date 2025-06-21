@@ -38,35 +38,40 @@ export default function SimulationPage() {
   } = useForm<SimulationFormData>({
     resolver: zodResolver(simulationSchema),
     defaultValues: {
-      totalValue: 50000,
-      installments: 60,
-      interestRate: 1.2,
+      valorTotal: 0,
+      quantidadeParcelas: 1,
+      jurosAoMes: 1.0,
     },
   })
 
   const watchedValues = watch()
 
-  // Calcular parcela em tempo real
-  useEffect(() => {
-    const { totalValue, installments, interestRate } = watchedValues
+  let quantidadeParcelasvar = 0;
+  let jurosAoMesvar = 0;
 
-    if (totalValue && installments && interestRate) {
-      // Fórmula de juros compostos para financiamento
-      const monthlyRate = interestRate / 100
+  useEffect(() => {
+    const { valorTotal, quantidadeParcelas, jurosAoMes } = watchedValues
+
+    quantidadeParcelasvar = quantidadeParcelas;
+    jurosAoMesvar = jurosAoMes;
+
+    if (valorTotal && quantidadeParcelas && jurosAoMes) {
+      const monthlyRate = jurosAoMes / 100
       const payment =
-        (totalValue * monthlyRate * Math.pow(1 + monthlyRate, installments)) /
-        (Math.pow(1 + monthlyRate, installments) - 1)
+        (valorTotal * monthlyRate * Math.pow(1 + monthlyRate, quantidadeParcelas)) /
+        (Math.pow(1 + monthlyRate, quantidadeParcelas) - 1)
 
       setMonthlyPayment(payment)
-      setTotalAmount(payment * installments)
+      setTotalAmount(payment * quantidadeParcelas)
     }
   }, [watchedValues])
 
   const onSubmit = async (data: SimulationFormData) => {
     try {
       await addSimulation({
-        ...data,
-        monthlyPayment,
+        valorTotal: totalAmount,
+        quantidadeParcelas: quantidadeParcelasvar,
+        jurosAoMes: jurosAoMesvar
       })
 
       toast({
@@ -96,7 +101,6 @@ export default function SimulationPage() {
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-              {/* Formulário */}
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
@@ -108,38 +112,38 @@ export default function SimulationPage() {
                 <form onSubmit={handleSubmit(onSubmit)}>
                   <CardContent className="space-y-6">
                     <div className="space-y-2">
-                      <Label htmlFor="totalValue">Valor Total do Curso</Label>
+                      <Label htmlFor="valorTotal">Valor Total do Curso</Label>
                       <Input
-                        id="totalValue"
+                        id="valorTotal"
                         type="number"
                         step="0.01"
                         placeholder="50000"
-                        {...register("totalValue", { valueAsNumber: true })}
+                        {...register("valorTotal", { valueAsNumber: true })}
                       />
-                      {errors.totalValue && <p className="text-sm text-red-600">{errors.totalValue.message}</p>}
+                      {errors.valorTotal && <p className="text-sm text-red-600">{errors.valorTotal.message}</p>}
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="installments">Quantidade de Parcelas</Label>
+                      <Label htmlFor="quantidadeParcelas">Quantidade de Parcelas</Label>
                       <Input
-                        id="installments"
+                        id="quantidadeParcelas"
                         type="number"
                         placeholder="60"
-                        {...register("installments", { valueAsNumber: true })}
+                        {...register("quantidadeParcelas", { valueAsNumber: true })}
                       />
-                      {errors.installments && <p className="text-sm text-red-600">{errors.installments.message}</p>}
+                      {errors.quantidadeParcelas && <p className="text-sm text-red-600">{errors.quantidadeParcelas.message}</p>}
                     </div>
 
                     <div className="space-y-2">
-                      <Label htmlFor="interestRate">Taxa de Juros Mensal (%)</Label>
+                      <Label htmlFor="jurosAoMes">Taxa de Juros Mensal (%)</Label>
                       <Input
-                        id="interestRate"
+                        id="jurosAoMes"
                         type="number"
                         step="0.01"
                         placeholder="1.2"
-                        {...register("interestRate", { valueAsNumber: true })}
+                        {...register("jurosAoMes", { valueAsNumber: true })}
                       />
-                      {errors.interestRate && <p className="text-sm text-red-600">{errors.interestRate.message}</p>}
+                      {errors.jurosAoMes && <p className="text-sm text-red-600">{errors.jurosAoMes.message}</p>}
                     </div>
 
                     <Button type="submit" className="w-full" disabled={isLoading}>
@@ -173,7 +177,7 @@ export default function SimulationPage() {
                     <div className="p-4 border rounded-lg">
                       <p className="text-sm text-gray-600">Valor Financiado</p>
                       <p className="text-xl font-semibold">
-                        {(watchedValues.totalValue || 0).toLocaleString("pt-BR", {
+                        {(watchedValues.valorTotal || 0).toLocaleString("pt-BR", {
                           style: "currency",
                           currency: "BRL",
                         })}
@@ -193,7 +197,7 @@ export default function SimulationPage() {
                     <div className="p-4 border rounded-lg">
                       <p className="text-sm text-gray-600">Juros Totais</p>
                       <p className="text-xl font-semibold text-red-600">
-                        {(totalAmount - (watchedValues.totalValue || 0)).toLocaleString("pt-BR", {
+                        {(totalAmount - (watchedValues.valorTotal || 0)).toLocaleString("pt-BR", {
                           style: "currency",
                           currency: "BRL",
                         })}
@@ -202,7 +206,7 @@ export default function SimulationPage() {
 
                     <div className="p-4 border rounded-lg">
                       <p className="text-sm text-gray-600">Prazo</p>
-                      <p className="text-xl font-semibold">{watchedValues.installments || 0} meses</p>
+                      <p className="text-xl font-semibold">{watchedValues.quantidadeParcelas || 0} meses</p>
                     </div>
                   </div>
 

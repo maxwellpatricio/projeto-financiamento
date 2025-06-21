@@ -7,5 +7,5 @@ export const createSimulacaoSchema = z.object({
     .int("Quantidade de parcelas deve ser um número inteiro")
     .min(1, "Mínimo 1 parcela")
     .max(360, "Máximo 360 parcelas"),
-  jurosAoMes: z.number().min(0, "Juros não pode ser negativo").max(0.1, "Juros máximo é 10% ao mês"),
+  jurosAoMes: z.number().min(0, "Juros não pode ser negativo"),
 })

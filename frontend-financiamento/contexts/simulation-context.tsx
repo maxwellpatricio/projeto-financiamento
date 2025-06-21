@@ -32,44 +32,23 @@ export const SimulationProvider: React.FC<SimulationProviderProps> = ({ children
 
   const getSimulations = async () => {
     if (!user) return
-
     setIsLoading(true)
-    try {
-      // Simulação de API call
-      await new Promise((resolve) => setTimeout(resolve, 500))
 
+    try {
       // Mock data
       const mockSimulations: Simulation[] = [
         {
-          id: "1",
           userId: user.id,
-          totalValue: 50000,
-          installments: 60,
-          interestRate: 1.2,
-          monthlyPayment: 1045.67,
-          createdAt: "2024-01-15T10:30:00Z",
-          updatedAt: "2024-01-15T10:30:00Z",
+          valorTotal: 50000,
+          quantidadeParcelas: 60,
+          jurosAoMes: 1.2
         },
         {
-          id: "2",
           userId: user.id,
-          totalValue: 75000,
-          installments: 84,
-          interestRate: 1.1,
-          monthlyPayment: 1234.56,
-          createdAt: "2024-01-10T14:20:00Z",
-          updatedAt: "2024-01-10T14:20:00Z",
-        },
-        {
-          id: "3",
-          userId: user.id,
-          totalValue: 30000,
-          installments: 36,
-          interestRate: 1.5,
-          monthlyPayment: 1089.23,
-          createdAt: "2024-01-05T09:15:00Z",
-          updatedAt: "2024-01-05T09:15:00Z",
-        },
+          valorTotal: 75000,
+          quantidadeParcelas: 84,
+          jurosAoMes: 1.1
+        }
       ]
 
       setSimulations(mockSimulations)
@@ -80,20 +59,30 @@ export const SimulationProvider: React.FC<SimulationProviderProps> = ({ children
     }
   }
 
-  const addSimulation = async (simulationData: Omit<Simulation, "id" | "userId" | "createdAt" | "updatedAt">) => {
+  const addSimulation = async (simulationData: Omit<Simulation, "userId" | "createdAt" | "updatedAt">) => {
     if (!user) return
 
     setIsLoading(true)
     try {
-      // Simulação de API call
-      await new Promise((resolve) => setTimeout(resolve, 500))
+      const token = localStorage.getItem("token");
+      if (!token) return
 
       const newSimulation: Simulation = {
-        id: Date.now().toString(),
         userId: user.id,
-        ...simulationData,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
+        ...simulationData
+      }
+
+      const response = await fetch('http://localhost:3000/api/simulations', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': token
+        },
+        body: JSON.stringify(newSimulation),
+      });
+
+      if (response.status != 200) {
+        throw new Error('Credenciais inválidas');
       }
 
       setSimulations((prev) => [newSimulation, ...prev])
