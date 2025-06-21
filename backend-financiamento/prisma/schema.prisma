@@ -1,0 +1,36 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Estudante {
+  id        String   @id @default(cuid())
+  nome      String
+  sobrenome String
+  email     String   @unique
+  senha     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  simulacoes SimulacaoFinanciamento[]
+
+  @@map("estudantes")
+}
+
+model SimulacaoFinanciamento {
+  id                   String   @id @default(cuid())
+  idEstudante          String   @map("id_estudante")
+  valorTotal           Float    @map("valor_total")
+  quantidadeParcelas   Int      @map("quantidade_parcelas")
+  jurosAoMes           Float    @map("juros_ao_mes")
+  valorParcelaMensal   Float    @map("valor_parcela_mensal")
+  dataCriacao          DateTime @default(now()) @map("data_criacao")
+
+  estudante Estudante @relation(fields: [idEstudante], references: [id], onDelete: Cascade)
+
+  @@map("simulacoes_financiamento")
+}
